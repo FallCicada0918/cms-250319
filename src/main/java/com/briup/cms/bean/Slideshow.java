@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -53,9 +55,10 @@ public class Slideshow implements Serializable {
     private Integer deleted;
 
     /**
-     * 上传时间
+     * 上传时间，GMT指格林尼治所在地标准时间，＋8：00就是东八区的时间，即北京
+     时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime uploadTime;
-
 
 }

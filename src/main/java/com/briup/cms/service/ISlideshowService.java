@@ -8,9 +8,9 @@ import java.util.List;
 public interface ISlideshowService {
     List<Slideshow> queryAllEnable();
 
-    IPage<Slideshow> query(Integer page, Integer pageSize, String status, String desc);
+    IPage<Slideshow> query(Integer pageNum, Integer pageSize, String status, String desc);
 
-    Slideshow queryById(Integer id);
+    Object queryById(Integer id);
 
     void saveOrUpdate(Slideshow slideshow);
 

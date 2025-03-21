@@ -11,6 +11,26 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  #新增内容：上传文件大小配置
+  servlet:
+    multipart:
+    # 单个文件上传的最大大小 默认为 1MB
+    max-file-size: 10MB
+    # 单次请求文件上传的最大大小 默认值为 10MB
+    max-request-size: 100MB
+
+  # 文件上传相关配置
+upload:
+  # 七牛云OSS相关配置
+  OSS:
+    # 配置AK
+    accessKey: "KuZHcjj75tYneZjparxp6hyQOcBoZTAJllvy1hzz"
+    # 配置SK
+    secretKey: "7rXshOv5buImn3-u3GgS1mbJGNzX8wDILEe40qge"
+    # 配置桶
+    bucket: "fallcicada-workspace"
+    # 配置基础域名
+    baseUrl: "https://portal.qiniu.com/cdn/domain/sswdsbu7d.hd-bkt.clouddn.com"
 
 mybatis-plus:
   configuration:

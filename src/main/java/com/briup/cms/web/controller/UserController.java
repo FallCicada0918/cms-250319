@@ -46,7 +46,7 @@ public class UserController {
     public Result getInfo(HttpServletRequest request) {
         String jwt = request.getHeader("Authorization");
         log.info("jwt: {}", jwt);
-        long id = Long.parseLong(JwtUtil.getUserId(jwt));
+        long id = JwtUtil.getUserId(jwt);
         log.info("id: {}", id);
         return Result.success(userService.queryById(id));
     }

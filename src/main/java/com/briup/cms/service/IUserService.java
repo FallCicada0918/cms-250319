@@ -1,18 +1,12 @@
 package com.briup.cms.service;
 
 import com.briup.cms.bean.User;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
-/*
- * @Description:
- * @Author:FallCicada
- * @Date: 2025/03/20/14:47
- * @LastEditors: 86138
- * @Slogan: 無限進步
- */
+@Service
 public interface IUserService {
     User login(String username, String password);
 
     User queryById(Long id);
-
-
 }

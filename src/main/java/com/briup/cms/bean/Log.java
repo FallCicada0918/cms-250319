@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -63,11 +65,19 @@ public class Log implements Serializable {
     /**
      * 请求接口耗时
      */
+    /**
+     * 上传时间，GMT指格林尼治所在地标准时间，＋8：00就是东八区的时间，即北京时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Long spendTime;
 
     /**
      * 创建时间
      */
+    /**
+     * 上传时间，GMT指格林尼治所在地标准时间，＋8：00就是东八区的时间，即北京时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime createTime;
 
     /**

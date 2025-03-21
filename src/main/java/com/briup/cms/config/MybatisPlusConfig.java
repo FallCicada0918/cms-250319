@@ -19,10 +19,11 @@ public class MybatisPlusConfig {
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         //1 创建MybatisPlusInterceptor拦截器对象
-        MybatisPlusInterceptor interceptor =
-                new MybatisPlusInterceptor();
+        MybatisPlusInterceptor interceptor = new
+                MybatisPlusInterceptor();
         //2 添加分页拦截器
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        interceptor.addInnerInterceptor(new
+                PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
     }
 }
