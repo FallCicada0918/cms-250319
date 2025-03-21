@@ -24,6 +24,7 @@ import java.util.Map;
 public class LoginController {
     @Autowired
     private IUserService userService;
+
     @ApiOperation(value = "登录", notes = "需要提供用户名和密码")
     @PostMapping(value = "/login")
     public Result login(@RequestBody LoginParam param) {
@@ -40,6 +41,7 @@ public class LoginController {
         String token = JwtUtil.generateJwt(map);
         return Result.success(token);
     }
+
     @ApiOperation(value = "登录", notes = "需要提供用户名和密码")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "用户名",
@@ -50,9 +52,15 @@ public class LoginController {
                     defaultValue = "123456")
     }) //Post请求 + form提交 + consumes设置表单字符串
     @PostMapping(value = "/login_old", consumes = "application/x-www-form-urlencoded")
-            public Result login(String username,
+    public Result login(String username,
             @RequestParam("password") String passwd) {
             User user = userService.login(username, passwd);
- return Result.success(user);
+            return Result.success(user);
+    }
+
+    @ApiOperation(value = "退出登录")
+    @PostMapping(value = "/logout")
+    public Result logout() {
+        return Result.success();
+    }
 }
- }
