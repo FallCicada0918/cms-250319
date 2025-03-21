@@ -1,10 +1,13 @@
 package com.briup.cms.web.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.briup.cms.bean.Category;
 import com.briup.cms.service.ICategoryService;
 import com.briup.cms.util.Result;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +39,25 @@ public class CategoryController {
     public Result getCategoryById(@PathVariable("id") Integer id) {
         Category category = categoryService.getCategoryById(id);
         return Result.success(category);
+    }
+
+    @ApiOperation(value = "分页查询所有栏目")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "当前页",
+                    dataType = "int", required = true, defaultValue = "1", paramType
+                    = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量",
+                    dataType = "int", required = true, defaultValue = "4", paramType
+                    = "query"),
+            @ApiImplicitParam(name = "parentId", value = "父栏目id",
+                    dataType = "int", paramType = "query")
+    })
+    @GetMapping("/query")
+    public Result query(Integer pageNum, Integer pageSize, Integer
+            parentId) {
+        IPage<Category> p = categoryService.query(pageNum, pageSize,
+                parentId);
+        return Result.success(p);
     }
 
 }

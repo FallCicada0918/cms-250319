@@ -1,6 +1,8 @@
 package com.briup.cms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.briup.cms.bean.Category;
 import com.briup.cms.dao.CategoryDao;
 import com.briup.cms.exception.ServiceException;
@@ -68,5 +70,27 @@ public class CategoryServiceImpl implements ICategoryService {
             throw new
                     ServiceException(ResultCode.CATEGORY_NOT_EXIST);
         return category;
+    }
+
+    //分页+条件查询(根据parent_id)
+    @Override
+    public IPage<Category> query(Integer pageNum, Integer pageSize,
+                                 Integer parentId) {
+        //1.参数判断
+        if (pageNum == null || pageNum <= 0 || pageSize == null ||
+                pageSize <= 0)
+            throw new ServiceException(ResultCode.PARAM_IS_INVALID);
+        //2.分页查询 设置排序次序
+        //  select * from cms_category where deleted = 0 andparent_id = ? order by parent_id, order_num;
+        IPage<Category> p = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Category> qw = new LambdaQueryWrapper<>();
+        qw.eq(parentId != null, Category::getParentId, parentId);
+        qw.orderByAsc(Category::getParentId)
+                .orderByAsc(Category::getOrderNum);
+        categoryDao.selectPage(p, qw);
+        if (p.getTotal() == 0)
+            throw new
+                    ServiceException(ResultCode.CATEGORY_NOT_EXIST);
+        return p;
     }
 }
