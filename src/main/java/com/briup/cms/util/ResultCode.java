@@ -47,8 +47,9 @@ public enum ResultCode {
 	/* 权限错误：70001-79999 */
 	PERMISSION_NO_ACCESS(70001, "无访问权限"),
 
-	/* 栏目名称重复 */
-	CATEGORYNAME_HAS_EXISTED(80001, "栏目名称已存在");
+	/* 栏目模块错误：80001 - 89999 */
+	CATEGORYNAME_HAS_EXISTED(80001, "栏目名称已存在"),
+	CATEGORY_NOT_EXIST(80002, "栏目不存在");
 
 
 	private Integer code;

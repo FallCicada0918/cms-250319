@@ -60,4 +60,13 @@ public class CategoryServiceImpl implements ICategoryService {
         //5.插入
         categoryDao.insert(category);
     }
+
+    @Override
+    public Category getCategoryById(Integer id) {
+        Category category = categoryDao.selectById(id);
+        if(category == null)
+            throw new
+                    ServiceException(ResultCode.CATEGORY_NOT_EXIST);
+        return category;
+    }
 }

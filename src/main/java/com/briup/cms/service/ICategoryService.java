@@ -11,4 +11,6 @@ import com.briup.cms.bean.Category;
  */
 public interface ICategoryService {
     void insert(Category category);
+
+    Category getCategoryById(Integer id);
 }
