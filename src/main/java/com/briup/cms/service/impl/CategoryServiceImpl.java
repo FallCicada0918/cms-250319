@@ -93,4 +93,47 @@ public class CategoryServiceImpl implements ICategoryService {
                     ServiceException(ResultCode.CATEGORY_NOT_EXIST);
         return p;
     }
+
+    //更新栏目
+    @Override
+    public void update(Category category) {
+        //1.id判断：不能为空 必须有效
+        Integer id = category.getId();
+        Category oldCategory = categoryDao.selectById(id);
+        if (id == null || oldCategory == null)
+            throw new
+                    ServiceException(ResultCode.CATEGORY_NOT_EXIST);
+        //2.name判断：如果存在则必须唯一
+        LambdaQueryWrapper<Category> qw =
+                new LambdaQueryWrapper<>();
+        //当待修改的栏目名字与原栏目名不一致时,需要判断待修改的名字在数据库中是否已被使用
+        String cname = category.getName();
+        if (cname != null &&
+                !cname.equals(oldCategory.getName())) {
+            qw.eq(Category::getName, cname);
+            if (categoryDao.selectOne(qw) != null)
+                throw new
+                        ServiceException(ResultCode.CATEGORYNAME_HAS_EXISTED);
+        }
+        Integer parentId = category.getParentId();
+        //3.如果当前栏目为1级，则不能更改为2级
+        if (oldCategory.getParentId() == null &&
+                parentId != null) {
+            throw new
+                    ServiceException(ResultCode.CATEGORY_LEVEL_SETTING_ERROR);
+        }
+        //4.如果需要修改的栏目为2级，且要修改其父栏目
+        if (oldCategory.getParentId() != null &&
+                parentId != null) {
+            Category pCategory =
+                    categoryDao.selectById(parentId);
+            // 需要更新的父栏目不存在，或 需要更新的父栏目为2级栏目，则失败
+            if (pCategory == null ||
+                    pCategory.getParentId() != null)
+                throw new
+                        ServiceException(ResultCode.PCATEGORY_IS_INVALID);
+        }
+        //5.执行更新操作
+        categoryDao.updateById(category);
+    }
 }

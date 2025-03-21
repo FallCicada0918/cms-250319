@@ -17,4 +17,6 @@ public interface ICategoryService {
 
     IPage<Category> query(Integer pageNum, Integer pageSize,
                           Integer parentId);
+
+    void update(Category category);
 }

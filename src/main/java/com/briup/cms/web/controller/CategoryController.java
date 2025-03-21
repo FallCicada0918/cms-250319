@@ -60,6 +60,14 @@ public class CategoryController {
         return Result.success(p);
     }
 
+    @ApiOperation(value = "更新栏目", notes = "栏目名必须唯一，栏目级别不能改动")
+    @PutMapping("/update")
+    public Result update(@RequestBody Category category) {
+        categoryService.update(category);
+        return Result.success("修改成功");
+    }
+
+
 }
 
 
