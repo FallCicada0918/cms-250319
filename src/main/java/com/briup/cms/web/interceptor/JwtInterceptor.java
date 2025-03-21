@@ -45,8 +45,8 @@ public class JwtInterceptor implements HandlerInterceptor {
         }catch (Exception e) {
             log.error(e.getMessage());
             //服务器内部错误
-            throw new
-                    ServiceException(ResultCode.SYSTEM_INNER_ERROR);
+//            throw new
+//                    ServiceException(ResultCode.SYSTEM_INNER_ERROR);
         }
         return true;
     }

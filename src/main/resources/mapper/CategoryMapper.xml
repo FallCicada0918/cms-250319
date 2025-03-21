@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.briup.cms.dao.CategoryDao">
 
+    <select id="getMaxOrderNum" resultType="int">
+        select max(order_num)
+        from cms_category
+        where deleted = 0
+    </select>
+
 </mapper>

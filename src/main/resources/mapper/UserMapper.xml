@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.briup.cms.dao.UserDao">
+    <!-- User基础封装映射 -->
+    <resultMap id="BaseUserResult" type="com.briup.cms.bean.User">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <!--<result property="password" column="password"></result>-->
+        <result property="avatar" column="avatar"></result>
+        <result property="gender" column="gender"></result>
+        <result property="email" column="email"></result>
+        <result property="phone" column="phone"></result>
+        <result property="registerTime" column="register_time"></result>
+        <result property="status" column="status"></result>
+        <result property="birthday" column="birthday"></result>
+        <result property="roleId" column="role_id"></result>
+        <result property="isVip" column="is_vip"></result>
+        <result property="expiresTime" column="expires_time"></result>
+        <result property="deleted" column="deleted"></result>
+    </resultMap>
 
+    <!-- 引用RoleMapper.xml中的BaseRoleResult -->
+    <resultMap id="UserResultWithRole" type="com.briup.cms.bean.extend.UserExtend"
+               extends="BaseUserResult">
+        <association property="role" resultMap="com.briup.cms.dao.RoleDao.BaseRoleResult"/>
+    </resultMap>
+
+    <select id="queryAllUserWithRole" resultMap="UserResultWithRole">
+        SELECT u.id,u.username,u.password,
+        u.avatar,u.gender,u.email,u.phone,u.register_time,u.status,
+        u.role_id,u.birthday,u.is_vip,u.expires_time,u.deleted,
+        r.id rid,r.name,r.description
+        FROM cms_user u INNER JOIN cms_role r
+        ON u.role_id = r.id
+        <where>
+            u.deleted = 0
+            <if test="roleId != null">
+                and u.role_id=#{roleId}
+            </if>
+            <if test="status != null and status != ''">
+                and u.status=#{status}
+            </if>
+            <if test="isVip != null">
+                and u.is_vip=#{isVip}
+            </if>
+            <if test="username != null and username != ''">
+                and u.username like concat('%',#{username},'%')
+            </if>
+        </where>
+    </select>
 </mapper>

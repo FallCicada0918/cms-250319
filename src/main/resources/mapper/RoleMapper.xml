@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.briup.cms.dao.RoleDao">
-
+    <!-- Role基础封装映射-->
+    <resultMap id="BaseRoleResult" type="com.briup.cms.bean.Role">
+        <!-- 注意，查询的列是 rid -->
+        <id property="id" column="rid"></id>
+        <result property="name" column="name"></result>
+        <result property="description" column="description"></result>
+    </resultMap>
 </mapper>

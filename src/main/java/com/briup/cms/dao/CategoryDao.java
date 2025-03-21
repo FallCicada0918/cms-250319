@@ -12,5 +12,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2025-03-19
  */
 public interface CategoryDao extends BaseMapper<Category> {
+    //查询栏目表中最大的order_num值
+    Integer getMaxOrderNum();
+
 
 }
