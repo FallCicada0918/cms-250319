@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.briup.cms.bean.Category;
+import com.briup.cms.bean.extend.CategoryExtend;
+import com.briup.cms.dao.ArticleDao;
 import com.briup.cms.dao.CategoryDao;
 import com.briup.cms.exception.ServiceException;
 import com.briup.cms.service.ICategoryService;
@@ -11,6 +13,8 @@ import com.briup.cms.util.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /*
  * @Description:
@@ -24,6 +28,9 @@ import org.springframework.stereotype.Service;
 public class CategoryServiceImpl implements ICategoryService {
     @Autowired
     private CategoryDao categoryDao;
+
+    @Autowired
+    private ArticleDao articleDao;
 
     @Override
     public void insert(Category category) {
@@ -135,5 +142,86 @@ public class CategoryServiceImpl implements ICategoryService {
         }
         //5.执行更新操作
         categoryDao.updateById(category);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        //1.栏目id判断
+        Category category = categoryDao.selectById(id);
+        if (category == null)
+            throw new
+                    ServiceException(ResultCode.CATEGORY_NOT_EXIST);
+        //2.栏目级别判断
+        if (category.getParentId() == null) {
+            //一级栏目
+            // 2.1 如果该1级栏目下存在2级栏目，删除失败
+            //select count(*) from cms_category where deleted = 0and parent_id = ?
+            LambdaQueryWrapper<Category> qw =
+                    new LambdaQueryWrapper<>();
+            qw.eq(Category::getParentId, id);
+            if(categoryDao.selectCount(qw) > 0)
+                throw new
+                        ServiceException(ResultCode.PARAM_IS_INVALID);
+        } else {
+            //二级栏目
+            // 2.2 如果2级栏目下不存在任何资讯，可以删除
+            //select count(*) from cms_article where deleted = 0 and category_id = ?
+            // 2.3 如果2级栏目下存在资讯，且发表资讯的用户存在(未删除状态)，则删除失败
+            Integer num =
+                    articleDao.getArticleNumByCategoryId(id);
+            if (num > 0)
+                throw new
+                        ServiceException(ResultCode.PARAM_IS_INVALID);
+        }
+        //3.栏目删除
+        categoryDao.deleteById(id);
+    }
+
+    //批量删除栏目
+    @Override
+    public void deleteInBatch(List<Integer> ids) {
+        //定义删除成功标志，默认为 false
+        boolean flag = false;
+        for (Integer id : ids) {
+            try {
+                deleteById(id);
+                //只要有一个栏目被成功删除，就修改标记为true
+                flag = true;
+            } catch (ServiceException e) {
+                System.out.println("delete 失败，id: " + id);
+            }
+        }
+        //如果传递的所有栏目都没有被删除，则批量删除失败
+        if (!flag)
+            throw new ServiceException(ResultCode.PARAM_IS_INVALID);
+    }
+
+    //该功能前面功能模块中已经实现
+    //查询得到所有的一级栏目,不含二级栏目,用于导入时转换名称和ID
+    @Override
+    public List<Category> queryAllOneLevel() {
+        LambdaQueryWrapper<Category> queryWrapper =
+                new LambdaQueryWrapper<>();
+        queryWrapper.isNull(Category::getParentId);
+        List<Category> list =
+                categoryDao.selectList(queryWrapper);
+        if (list == null || list.size() == 0)
+            throw new ServiceException(ResultCode.CATEGORY_NOT_EXIST);
+        return list;
+    }
+
+    @Override
+    public List<Category> queryAll() {
+        return categoryDao.selectList(null);
+    }
+
+    //查询得到所有的一级栏目（含二级）
+    @Override
+    public List<CategoryExtend> queryAllParent() {
+        List<CategoryExtend> list = categoryDao.queryAllWithCates();
+        if (list == null || list.size() == 0)
+            throw new
+                    ServiceException(ResultCode.CATEGORY_NOT_EXIST);
+        return list;
     }
 }

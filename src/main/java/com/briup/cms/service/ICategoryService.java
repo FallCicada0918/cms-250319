@@ -2,6 +2,9 @@ package com.briup.cms.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.briup.cms.bean.Category;
+import com.briup.cms.bean.extend.CategoryExtend;
+
+import java.util.List;
 
 /*
  * @Description:
@@ -19,4 +22,14 @@ public interface ICategoryService {
                           Integer parentId);
 
     void update(Category category);
+
+    void deleteById(Integer id);
+
+    void deleteInBatch(List<Integer> ids);
+
+    List<Category> queryAllOneLevel();
+
+    List<Category> queryAll();
+
+    List<CategoryExtend> queryAllParent();
 }

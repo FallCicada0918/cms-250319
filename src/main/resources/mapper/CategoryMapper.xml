@@ -2,10 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.briup.cms.dao.CategoryDao">
 
+
+    <resultMap id="BaseCategoryResult"
+               type="com.briup.cms.bean.Category">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="parent_id" property="parentId"/>
+    </resultMap>
+    <resultMap id="CategoryWithChildsResult"
+               type="com.briup.cms.bean.extend.CategoryExtend"
+               extends="BaseCategoryResult">
+        <!-- 1对多嵌套查询 -->
+        <collection property="cates" column="id"
+                    select="queryByParentId"/>
+    </resultMap>
+
     <select id="getMaxOrderNum" resultType="int">
         select max(order_num)
         from cms_category
         where deleted = 0
+    </select>
+
+
+    <!-- 根据parentId查询得到所有2级栏目 -->
+    <select id="queryByParentId" resultMap="BaseCategoryResult">
+        select *
+        from cms_category
+        where deleted = 0
+          and parent_id = #{parentId}
+        order by order_num
+    </select>
+    <select id="queryAllWithCates"
+            resultMap="CategoryWithChildsResult">
+        select *
+        from cms_category
+        where deleted = 0
+          and parent_id is null
+        order by order_num
     </select>
 
 </mapper>

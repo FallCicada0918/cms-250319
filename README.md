@@ -116,7 +116,16 @@ mybatis:
    ```
 
 ## API文档
-项目集成了Swagger用于API文档生成，启动项目后访问`http://localhost:8989/swagger-ui.html`查看API文档。
+项目集成了Swagger用于API文档生成，启动项目后访问`http://127.0.0.1:8989/dox.html`查看API文档。
+
+## 用户页面
+
+`http://127.0.0.1:92`
+
+## 管理员后台
+
+`http://127.0.0.1:92`
+
 
 ## 贡献
 欢迎提交Pull Request或Issue来贡献代码和反馈问题。

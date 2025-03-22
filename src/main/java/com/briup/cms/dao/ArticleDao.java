@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface ArticleDao extends BaseMapper<Article> {
 
+    //根据2级栏目id查询有效的资讯数量(发布的用户存在)
+    Integer getArticleNumByCategoryId(Integer categoryId);
+
 }

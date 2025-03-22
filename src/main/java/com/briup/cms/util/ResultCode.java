@@ -26,6 +26,9 @@ public enum ResultCode {
 	/* 业务错误：30001-39999 */
 	SPECIFIED_QUESTIONED_USER_NOT_EXIST(30001, "业务逻辑出现问题"),
 
+	CATEGORY_NOT_EXIST(30005, "栏目不存在"),
+	PCATEGORY_IS_INVALID(30006, "父栏目名无效"),
+
 	/* 系统错误：40001-49999 */
 	SYSTEM_INNER_ERROR(40001, "系统内部错误，请稍后重试"),
 
@@ -49,9 +52,7 @@ public enum ResultCode {
 
 	/* 栏目模块错误：80001 - 89999 */
 	CATEGORYNAME_HAS_EXISTED(80001, "栏目名称已存在"),
-	CATEGORY_NOT_EXIST(80002, "栏目不存在"),
-	CATEGORY_LEVEL_SETTING_ERROR(80003, "栏目级别不可修改"),
-	PCATEGORY_IS_INVALID(80004, "父栏目不存在或父栏目为2级栏目");
+	CATEGORY_LEVEL_SETTING_ERROR(80003, "栏目级别不可修改");
 
 
 	private Integer code;

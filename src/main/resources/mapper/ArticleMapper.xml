@@ -2,4 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.briup.cms.dao.ArticleDao">
 
+    <!--
+    统计文章数量 getArticleNumByCategoryId
+    要求1：文章存在(未被删除)
+    要求2：文章属于指定的2级栏目下
+    要求3：文章的拥有者user_id存在(未被删除)-->
+    <select id="getArticleNumByCategoryId" resultType="int">
+        select count(*)
+        from cms_article
+        where deleted = 0
+          and category_id = #{categoryId}
+          and user_id in (
+            select id
+            from cms_user
+            where deleted = 0
+        )
+    </select>
+
 </mapper>
