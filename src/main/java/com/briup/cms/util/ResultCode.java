@@ -26,9 +26,6 @@ public enum ResultCode {
 	/* 业务错误：30001-39999 */
 	SPECIFIED_QUESTIONED_USER_NOT_EXIST(30001, "业务逻辑出现问题"),
 
-	CATEGORY_NOT_EXIST(30005, "栏目不存在"),
-	PCATEGORY_IS_INVALID(30006, "父栏目名无效"),
-
 	/* 系统错误：40001-49999 */
 	SYSTEM_INNER_ERROR(40001, "系统内部错误，请稍后重试"),
 
@@ -39,6 +36,12 @@ public enum ResultCode {
 	SLIDESHOW_NOT_EXISTED(50004, "轮播图不存在"),
 	SLIDESHOW_URL_EXISTED(50005,"轮播图URL已存在"),
 
+	CATEGORYNAME_HAS_EXISTED(50006,"栏目名称已存在"),
+	CATEGORY_NOT_EXIST(50007,"栏目不存在"),
+	PCATEGORY_IS_INVALID(50008,"父栏目无效"),
+	CATEGORY_LEVEL_SETTING_ERROR(50009,"栏目级别设置出错"),
+	ARTICLE_NOT_EXIST(50020,"资讯文章不存在"),
+
 
 	/* 接口错误：60001-69999 */
 	INTERFACE_INNER_INVOKE_ERROR(60001, "内部系统接口调用异常"),
@@ -48,12 +51,7 @@ public enum ResultCode {
 	INTERFACE_REQUEST_TIMEOUT(60005, "接口请求超时"),
 
 	/* 权限错误：70001-79999 */
-	PERMISSION_NO_ACCESS(70001, "无访问权限"),
-
-	/* 栏目模块错误：80001 - 89999 */
-	CATEGORYNAME_HAS_EXISTED(80001, "栏目名称已存在"),
-	CATEGORY_LEVEL_SETTING_ERROR(80003, "栏目级别不可修改");
-
+	PERMISSION_NO_ACCESS(70001, "无访问权限");
 
 	private Integer code;
 

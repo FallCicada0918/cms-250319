@@ -6,15 +6,18 @@ import com.briup.cms.bean.Category;
 import com.briup.cms.bean.extend.CategoryExtend;
 import com.briup.cms.service.ICategoryService;
 import com.briup.cms.util.Result;
+import com.briup.cms.util.execl.CategoryListener;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import com.briup.cms.util.execl.CategoryParentIdConverter;
 
 /**
  * <p>
@@ -116,6 +119,22 @@ public class CategoryController {
     public Result queryAllParent() {
         List<CategoryExtend> list = categoryService.queryAllParent();
         return Result.success(list);
+    }
+
+    @ApiOperation("导入栏目数据")
+    @PostMapping("/import")
+    public Result imports(@RequestPart MultipartFile file) {
+        //导入前,更新一级栏目集合,防止在导入前数据库中的一级栏目被更新
+        CategoryParentIdConverter.list =
+                categoryService.queryAllOneLevel();
+        //获取数据
+        List<Category> list =
+                excelUtils.importData(file, Category.class, new
+                        CategoryListener());
+        //导入数据到数据库中
+        categoryService.insertInBatch(list);
+        return Result.success("数据导入成功");
+
     }
 
 }

@@ -224,4 +224,13 @@ public class CategoryServiceImpl implements ICategoryService {
                     ServiceException(ResultCode.CATEGORY_NOT_EXIST);
         return list;
     }
+
+    //批量插入栏目【excel导入栏目时用到】
+    @Override
+    public void insertInBatch(List<Category> list) {
+        if (list == null || list.isEmpty()) {
+            throw new ServiceException(ResultCode.PARAM_IS_INVALID);
+        }
+        list.forEach(category->categoryDao.insert(category));
+    }
 }

@@ -32,4 +32,6 @@ public interface ICategoryService {
     List<Category> queryAll();
 
     List<CategoryExtend> queryAllParent();
+
+    void insertInBatch(List<Category> list);
 }

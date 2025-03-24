@@ -24,6 +24,9 @@ public class CategoryParentIdConverter implements Converter<Integer> {
     //用于存放所有父栏目对象
     public static List<Category> pCateList;
 
+    //用于存放父栏目数据
+    public static List<Category> list;
+
 
     /**
      * 开启对Integer的支持
