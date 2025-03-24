@@ -2,4 +2,70 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.briup.cms.dao.CommentDao">
 
+    <resultMap id="CommentExtendResult"
+               type="com.briup.cms.bean.extend.CommentExtend">
+        <id column="id" property="id"/>
+        <result column="content" property="content"/>
+        <result column="user_id" property="userId"/>
+        <result column="article_id" property="articleId"/>
+        <result column="publish_time" property="publishTime"/>
+
+        <!-- 1对1嵌套查询：根据用户id查找发表人 -->
+        <association property="author" column="user_id"
+                     select="com.briup.cms.dao.UserDao.selectById"/>
+        <!-- 1对多嵌套查询：根据1级评论id查询其下所有2级评论 -->
+        <collection property="childComments" column="id"
+                    select="com.briup.cms.dao.SubcommentDao.queryByParentId"/>
+    </resultMap>
+
+    <select id="queryByArticleId" resultMap="CommentExtendResult">
+        select *
+        from cms_comment
+        where deleted = 0
+          and user_id in (
+            select id
+            from cms_user
+            where deleted = 0
+        )
+          and article_id in (
+            select id
+            from cms_article
+            where deleted = 0
+        )
+          and article_id = #{aId}
+        order by publish_time desc
+    </select>
+
+    <select id="query" resultMap="CommentExtendResult">
+        select id,content,publish_time,user_id,article_id
+        from cms_comment
+        where deleted = 0
+        and user_id in (
+        select id
+        from cms_user
+        where deleted = 0
+        )
+        and article_id in (
+        select id
+        from cms_article
+        where deleted = 0
+        )
+        <if test="articleId != null">
+            and article_id = #{articleId}
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and content like concat('%', #{keyword}, '%')
+        </if>
+        <if test="startTime != null">
+            and publish_time >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and publish_time <![CDATA[<=]]> #{endTime}
+        </if>
+        order by publish_time desc
+    </select>
+
 </mapper>

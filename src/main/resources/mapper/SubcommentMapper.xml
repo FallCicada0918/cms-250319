@@ -2,4 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.briup.cms.dao.SubcommentDao">
 
+    <!-- 二级评论基础映射规则 -->
+    <resultMap id="BaseSubCommentResult" type="com.briup.cms.bean.Subcomment">
+        <id property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="publishTime" column="publish_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="replyId" column="reply_id"/>
+    </resultMap>
+
+    <resultMap id="SubCommentWithUser" type="com.briup.cms.bean.extend.SubCommentExtend"
+               extends="BaseSubCommentResult">
+        <association property="author" column="user_id"
+                     select="com.briup.cms.dao.UserDao.selectById"/>
+    </resultMap>
+
+    <select id="queryByParentId" resultMap="SubCommentWithUser">
+        select *
+        from cms_subcomment
+        where deleted = 0
+          and parent_id = #{parentId}
+          and user_id in (
+            select id
+            from cms_user
+            where deleted = 0
+              and status = '启用'
+        )
+        order by publish_time
+    </select>
+
 </mapper>
