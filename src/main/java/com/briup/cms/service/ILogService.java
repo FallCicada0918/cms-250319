@@ -2,7 +2,10 @@ package com.briup.cms.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.briup.cms.bean.LogParam;
+import com.briup.cms.bean.dto.LogExportParam;
 import com.briup.cms.bean.vo.LogVO;
+
+import java.util.List;
 
 /*
  * @Description:
@@ -13,4 +16,7 @@ import com.briup.cms.bean.vo.LogVO;
  */
 public interface ILogService {
     IPage<LogVO> query(LogParam param);
+
+    List<LogVO> queryForExport(LogExportParam param);
+
 }

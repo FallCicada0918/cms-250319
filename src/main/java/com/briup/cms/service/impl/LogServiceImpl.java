@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.briup.cms.bean.Log;
 import com.briup.cms.bean.LogParam;
+import com.briup.cms.bean.dto.LogExportParam;
 import com.briup.cms.bean.vo.LogVO;
 import com.briup.cms.dao.LogDao;
 import com.briup.cms.exception.ServiceException;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /*
  * @Description:
@@ -55,6 +57,32 @@ public class LogServiceImpl implements ILogService {
         parseResultJson(logVOPage.getRecords());
         return logVOPage;
     }
+
+
+    @Override
+    public List<LogVO> queryForExport(LogExportParam param) {
+        //条件判断
+        if (param == null) {
+            throw new
+                    ServiceException(ResultCode.PARAM_IS_BLANK);
+        }
+        //获取查询条件
+        LambdaQueryWrapper<Log> wrapper =
+                getQueryWrapper(param.getUsername(),
+                        param.getRequestUrl(),param.getStartTime(), param.getEndTime());
+        //设置日志导出条数
+        wrapper.last(Objects.nonNull(param.getCount()), "limit "
+                + param.getCount());
+        //根据条件获取数据
+        List<Log> logList = logDao.selectList(wrapper);
+        //Bean拷贝
+        List<LogVO> logVOList =
+                BeanCopyUtils.copyBeanList(logList, LogVO.class);
+        //转换 resultJson 拆分成 code 及 msg
+        parseResultJson(logVOList);
+        return logVOList;
+    }
+
     private void parseResultJson(List<LogVO> list){
         list.forEach(logVO -> {
             Result result = gson.fromJson(logVO.getResultJson(),
